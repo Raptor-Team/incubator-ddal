@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleConfig xmlns="http://ddal.raptor.studio/rule-config"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://ddal.raptor.studio/rule-config">
+
+  <shardRules>
+    <shardRule name="id-rule" shardColumn="id" param="4"
+      algorithm="studio.raptor.ddal.common.algorithm.embed.DefaultModSingleKeyAlgorithm"/>
+    <shardRule name="id-mod2-rule" shardColumn="id" param="2"
+      algorithm="studio.raptor.ddal.common.algorithm.embed.DefaultModSingleKeyAlgorithm"/>
+    <shardRule name="code-mod2-rule" shardColumn="code" param="2"
+      algorithm="studio.raptor.ddal.common.algorithm.embed.DefaultModSingleKeyAlgorithm"/>
+    <shardRule name="teacher-database-rule" shardColumn="tno" param="4"
+      algorithm="studio.raptor.ddal.common.algorithm.embed.DefaultModSingleKeyAlgorithm"/>
+    <shardRule name="sno-database-rule" shardColumn="sno" param="4"
+      algorithm="studio.raptor.ddal.common.algorithm.embed.DefaultModSingleKeyAlgorithm"/>
+    <shardRule name="multi-shard-database-rule" shardColumn="primary_key,second_key" param="2"
+      algorithm="studio.raptor.ddal.common.algorithm.embed.DefaultModMultiKeyAlgorithm"/>
+    <shardRule name="cno-rule" shardColumn="cno" param="4"
+      algorithm="studio.raptor.ddal.common.algorithm.embed.DefaultModSingleKeyAlgorithm"/>
+
+    <shardRule name="substring-db-rule" shardColumn="id"
+      algorithm="studio.raptor.ddal.tests.algorithmn.SubstringAlgorithm"/>
+    <shardRule name="time-db-rule" shardColumn="time_string"
+      algorithm="studio.raptor.ddal.tests.algorithmn.DateAlgorithm"/>
+    <shardRule name="test-rule" shardColumn="id" param="ddal/area.properties"
+      algorithm="studio.raptor.ddal.tests.algorithmn.InstAreaIdSCShardAlgorithm"/>
+  </shardRules>
+</ruleConfig>

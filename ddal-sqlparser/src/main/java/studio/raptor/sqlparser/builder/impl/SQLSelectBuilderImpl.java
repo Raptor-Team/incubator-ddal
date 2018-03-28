@@ -1,0 +1,367 @@
+/*
+ * Copyright 1999-2017 Alibaba Group Holding Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package studio.raptor.sqlparser.builder.impl;
+
+import java.util.List;
+import studio.raptor.sqlparser.SQLUtils;
+import studio.raptor.sqlparser.ast.SQLExpr;
+import studio.raptor.sqlparser.ast.SQLLimit;
+import studio.raptor.sqlparser.ast.SQLOrderBy;
+import studio.raptor.sqlparser.ast.SQLStatement;
+import studio.raptor.sqlparser.ast.expr.SQLBinaryOperator;
+import studio.raptor.sqlparser.ast.expr.SQLIdentifierExpr;
+import studio.raptor.sqlparser.ast.expr.SQLIntegerExpr;
+import studio.raptor.sqlparser.ast.statement.SQLExprTableSource;
+import studio.raptor.sqlparser.ast.statement.SQLSelect;
+import studio.raptor.sqlparser.ast.statement.SQLSelectGroupByClause;
+import studio.raptor.sqlparser.ast.statement.SQLSelectItem;
+import studio.raptor.sqlparser.ast.statement.SQLSelectOrderByItem;
+import studio.raptor.sqlparser.ast.statement.SQLSelectQuery;
+import studio.raptor.sqlparser.ast.statement.SQLSelectQueryBlock;
+import studio.raptor.sqlparser.ast.statement.SQLSelectStatement;
+import studio.raptor.sqlparser.builder.SQLSelectBuilder;
+import studio.raptor.sqlparser.dialect.db2.ast.stmt.DB2SelectQueryBlock;
+import studio.raptor.sqlparser.dialect.mysql.ast.statement.MySqlSelectQueryBlock;
+import studio.raptor.sqlparser.dialect.odps.ast.OdpsSelectQueryBlock;
+import studio.raptor.sqlparser.dialect.oracle.ast.stmt.OracleSelect;
+import studio.raptor.sqlparser.dialect.oracle.ast.stmt.OracleSelectQueryBlock;
+import studio.raptor.sqlparser.dialect.postgresql.ast.stmt.PGSelectQueryBlock;
+import studio.raptor.sqlparser.dialect.sqlserver.ast.SQLServerSelect;
+import studio.raptor.sqlparser.dialect.sqlserver.ast.SQLServerSelectQueryBlock;
+import studio.raptor.sqlparser.dialect.sqlserver.ast.SQLServerTop;
+import studio.raptor.sqlparser.util.JdbcConstants;
+
+public class SQLSelectBuilderImpl implements SQLSelectBuilder {
+
+  private SQLSelectStatement stmt;
+  private String dbType;
+
+  public SQLSelectBuilderImpl(String dbType) {
+    this(new SQLSelectStatement(), dbType);
+  }
+
+  public SQLSelectBuilderImpl(String sql, String dbType) {
+    List<SQLStatement> stmtList = SQLUtils.parseStatements(sql, dbType);
+
+    if (stmtList.size() == 0) {
+      throw new IllegalArgumentException("not support empty-statement :" + sql);
+    }
+
+    if (stmtList.size() > 1) {
+      throw new IllegalArgumentException("not support multi-statement :" + sql);
+    }
+
+    SQLSelectStatement stmt = (SQLSelectStatement) stmtList.get(0);
+    this.stmt = stmt;
+    this.dbType = dbType;
+  }
+
+  public SQLSelectBuilderImpl(SQLSelectStatement stmt, String dbType) {
+    this.stmt = stmt;
+    this.dbType = dbType;
+  }
+
+  public SQLSelect getSQLSelect() {
+    if (stmt.getSelect() == null) {
+      stmt.setSelect(createSelect());
+    }
+    return stmt.getSelect();
+  }
+
+  @Override
+  public SQLSelectStatement getSQLSelectStatement() {
+    return stmt;
+  }
+
+  public SQLSelectBuilderImpl select(String... columns) {
+    SQLSelectQueryBlock queryBlock = getQueryBlock();
+
+    for (String column : columns) {
+      SQLSelectItem selectItem = SQLUtils.toSelectItem(column, dbType);
+      queryBlock.addSelectItem(selectItem);
+    }
+
+    return this;
+  }
+
+  @Override
+  public SQLSelectBuilderImpl selectWithAlias(String column, String alias) {
+    SQLSelectQueryBlock queryBlock = getQueryBlock();
+
+    SQLExpr columnExpr = SQLUtils.toSQLExpr(column, dbType);
+    SQLSelectItem selectItem = new SQLSelectItem(columnExpr, alias);
+    queryBlock.addSelectItem(selectItem);
+
+    return this;
+  }
+
+  @Override
+  public SQLSelectBuilderImpl from(String table) {
+    return from(table, null);
+  }
+
+  @Override
+  public SQLSelectBuilderImpl from(String table, String alias) {
+    SQLSelectQueryBlock queryBlock = getQueryBlock();
+    SQLExprTableSource from = new SQLExprTableSource(new SQLIdentifierExpr(table), alias);
+    queryBlock.setFrom(from);
+
+    return this;
+  }
+
+  @Override
+  public SQLSelectBuilderImpl orderBy(String... columns) {
+    SQLSelect select = this.getSQLSelect();
+
+    SQLOrderBy orderBy = select.getOrderBy();
+    if (orderBy == null) {
+      orderBy = createOrderBy();
+      select.setOrderBy(orderBy);
+    }
+
+    for (String column : columns) {
+      SQLSelectOrderByItem orderByItem = SQLUtils.toOrderByItem(column, dbType);
+      orderBy.addItem(orderByItem);
+    }
+
+    return this;
+  }
+
+  @Override
+  public SQLSelectBuilderImpl groupBy(String expr) {
+    SQLSelectQueryBlock queryBlock = getQueryBlock();
+
+    SQLSelectGroupByClause groupBy = queryBlock.getGroupBy();
+    if (groupBy == null) {
+      groupBy = createGroupBy();
+      queryBlock.setGroupBy(groupBy);
+    }
+
+    SQLExpr exprObj = SQLUtils.toSQLExpr(expr, dbType);
+    groupBy.addItem(exprObj);
+
+    return this;
+  }
+
+  @Override
+  public SQLSelectBuilderImpl having(String expr) {
+    SQLSelectQueryBlock queryBlock = getQueryBlock();
+
+    SQLSelectGroupByClause groupBy = queryBlock.getGroupBy();
+    if (groupBy == null) {
+      groupBy = createGroupBy();
+      queryBlock.setGroupBy(groupBy);
+    }
+
+    SQLExpr exprObj = SQLUtils.toSQLExpr(expr, dbType);
+    groupBy.setHaving(exprObj);
+
+    return this;
+  }
+
+  @Override
+  public SQLSelectBuilderImpl into(String expr) {
+    SQLSelectQueryBlock queryBlock = getQueryBlock();
+
+    SQLExpr exprObj = SQLUtils.toSQLExpr(expr, dbType);
+    queryBlock.setInto(exprObj);
+
+    return this;
+  }
+
+  @Override
+  public SQLSelectBuilderImpl where(String expr) {
+    SQLSelectQueryBlock queryBlock = getQueryBlock();
+
+    SQLExpr exprObj = SQLUtils.toSQLExpr(expr, dbType);
+    queryBlock.setWhere(exprObj);
+
+    return this;
+  }
+
+  @Override
+  public SQLSelectBuilderImpl whereAnd(String expr) {
+    SQLSelectQueryBlock queryBlock = getQueryBlock();
+
+    SQLExpr exprObj = SQLUtils.toSQLExpr(expr, dbType);
+    SQLExpr newCondition = SQLUtils.buildCondition(SQLBinaryOperator.BooleanAnd, exprObj, false,
+        queryBlock.getWhere());
+    queryBlock.setWhere(newCondition);
+
+    return this;
+  }
+
+  @Override
+  public SQLSelectBuilderImpl whereOr(String expr) {
+    SQLSelectQueryBlock queryBlock = getQueryBlock();
+
+    SQLExpr exprObj = SQLUtils.toSQLExpr(expr, dbType);
+    SQLExpr newCondition = SQLUtils.buildCondition(SQLBinaryOperator.BooleanOr, exprObj, false,
+        queryBlock.getWhere());
+    queryBlock.setWhere(newCondition);
+
+    return this;
+  }
+
+  @Override
+  public SQLSelectBuilderImpl limit(int rowCount) {
+    return limit(rowCount, 0);
+  }
+
+  @Override
+  public SQLSelectBuilderImpl limit(int rowCount, int offset) {
+    SQLSelectQueryBlock queryBlock = getQueryBlock();
+
+    if (queryBlock instanceof MySqlSelectQueryBlock) {
+      MySqlSelectQueryBlock mySqlQueryBlock = (MySqlSelectQueryBlock) queryBlock;
+
+      SQLLimit limit = new SQLLimit();
+      limit.setRowCount(new SQLIntegerExpr(rowCount));
+      if (offset > 0) {
+        limit.setOffset(new SQLIntegerExpr(offset));
+      }
+
+      mySqlQueryBlock.setLimit(limit);
+
+      return this;
+    }
+
+    if (queryBlock instanceof SQLServerSelectQueryBlock) {
+      SQLServerSelectQueryBlock sqlserverQueryBlock = (SQLServerSelectQueryBlock) queryBlock;
+      if (offset <= 0) {
+        SQLServerTop top = new SQLServerTop();
+        top.setExpr(new SQLIntegerExpr(rowCount));
+        sqlserverQueryBlock.setTop(top);
+      } else {
+        throw new UnsupportedOperationException("not support offset");
+      }
+
+      return this;
+    }
+
+    if (queryBlock instanceof PGSelectQueryBlock) {
+      PGSelectQueryBlock pgQueryBlock = (PGSelectQueryBlock) queryBlock;
+      SQLLimit limit = new SQLLimit();
+      if (offset > 0) {
+        limit.setOffset(new SQLIntegerExpr(offset));
+      }
+      limit.setRowCount(new SQLIntegerExpr(rowCount));
+      pgQueryBlock.setLimit(limit);
+
+      return this;
+    }
+
+    if (queryBlock instanceof DB2SelectQueryBlock) {
+      DB2SelectQueryBlock db2QueryBlock = (DB2SelectQueryBlock) queryBlock;
+      if (offset <= 0) {
+        SQLExpr rowCountExpr = new SQLIntegerExpr(rowCount);
+        db2QueryBlock.setFirst(rowCountExpr);
+      } else {
+        throw new UnsupportedOperationException("not support offset");
+      }
+
+      return this;
+    }
+
+    if (queryBlock instanceof OracleSelectQueryBlock) {
+      OracleSelectQueryBlock oracleQueryBlock = (OracleSelectQueryBlock) queryBlock;
+      if (offset <= 0) {
+        SQLExpr rowCountExpr = new SQLIntegerExpr(rowCount);
+        SQLExpr newCondition = SQLUtils
+            .buildCondition(SQLBinaryOperator.BooleanAnd, rowCountExpr, false,
+                oracleQueryBlock.getWhere());
+        queryBlock.setWhere(newCondition);
+      } else {
+        throw new UnsupportedOperationException("not support offset");
+      }
+
+      return this;
+    }
+
+    if (queryBlock instanceof OdpsSelectQueryBlock) {
+      OdpsSelectQueryBlock odpsQueryBlock = (OdpsSelectQueryBlock) queryBlock;
+
+      if (offset > 0) {
+        throw new UnsupportedOperationException("not support offset");
+      }
+
+      odpsQueryBlock.setLimit(new SQLLimit(new SQLIntegerExpr(rowCount)));
+
+      return this;
+    }
+
+    throw new UnsupportedOperationException();
+  }
+
+  protected SQLSelectQueryBlock getQueryBlock() {
+    SQLSelect select = getSQLSelect();
+    SQLSelectQuery query = select.getQuery();
+    if (query == null) {
+      query = createSelectQueryBlock();
+      select.setQuery(query);
+    }
+
+    if (!(query instanceof SQLSelectQueryBlock)) {
+      throw new IllegalStateException("not support from, class : " + query.getClass().getName());
+    }
+
+    SQLSelectQueryBlock queryBlock = (SQLSelectQueryBlock) query;
+    return queryBlock;
+  }
+
+  protected SQLSelect createSelect() {
+    if (JdbcConstants.SQL_SERVER.equals(dbType)) {
+      return new SQLServerSelect();
+    }
+    if (JdbcConstants.ORACLE.equals(dbType)) {
+      return new OracleSelect();
+    }
+
+    return new SQLSelect();
+  }
+
+  protected SQLSelectQuery createSelectQueryBlock() {
+    if (JdbcConstants.MYSQL.equals(dbType)) {
+      return new MySqlSelectQueryBlock();
+    }
+
+    if (JdbcConstants.POSTGRESQL.equals(dbType)) {
+      return new PGSelectQueryBlock();
+    }
+
+    if (JdbcConstants.SQL_SERVER.equals(dbType)) {
+      return new SQLServerSelectQueryBlock();
+    }
+
+    if (JdbcConstants.ORACLE.equals(dbType)) {
+      return new OracleSelectQueryBlock();
+    }
+
+    return new SQLSelectQueryBlock();
+  }
+
+  protected SQLOrderBy createOrderBy() {
+    return new SQLOrderBy();
+  }
+
+  protected SQLSelectGroupByClause createGroupBy() {
+    return new SQLSelectGroupByClause();
+  }
+
+  public String toString() {
+    return SQLUtils.toSQLString(stmt, dbType);
+  }
+}

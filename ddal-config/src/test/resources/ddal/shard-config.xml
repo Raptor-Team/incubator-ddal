@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dbShard xmlns="http://ddal.raptor.studio/shard-config"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://ddal.raptor.studio/shard-config">
+  <virtualDBs>
+    <!--
+    <虚拟数据库定义>
+    一组被切分的表、序列组成的虚拟库
+    <属性配置说明>
+           name: 虚拟数据库名称 （唯一性由配置人员约束）
+        rmOwner: 是否移除SQL语句中的属主（取值约束由XSD的boolean进行控制）
+                                           例如select  * from test.table(test即为属主)
+    sqlMaxLimit: 控制SQL查询语句的结果集大小。（取值约束由XSD控制，最小值-1:结果集大小无限制）
+    -->
+    <virtualDB name="crmdb" shardGroup="shardGroup1" rmOwner="true" sqlMaxLimit="100">
+      <!--
+      表元信息定义
+      <属性配置说明>
+          name:表名称
+          type:表类型 默认为普通表,global为全局表（see 术语解释-全局表）
+          shard:表所在分片列表,使用逗号分隔或$符号表达范围。例s0,s1 s$0-9(s0到s9的10个分片)
+          databaseRule:分库路由规则
+          actualTables:分表场景下的实际表
+          tableRule:分表路由规则
+          注意：如果是全局表，必须要写全分片，不可省略
+      -->
+      <!-- 即分库又分表配置 -->
+      <table name="teacher" actualTables="tb_0,tb_1" databaseRule="teacher-database-rule" tableRule="teacher-table-rule"/>
+      <!-- 仅分库场景配置 -->
+      <table name="student" databaseRule="student-database-rule"/>
+      <!-- 仅分库场景配置 -->
+      <table name="grade" shards="shard_bj_0" actualTables="grade_0,grade_1" tableRule="grade-table-rule"/>
+
+      <!-- 子表配置 -->
+      <table name="course" databaseRule="teacher-database-rule">
+        <!-- 子表，继承父表的分片规则 -->
+        <subTable name="book"/>
+      </table>
+
+      <table name="exam" databaseRule="teacher-database-rule">
+        <index name="_exam_course_id" refColumn="course_id" columns="*" databaseRule="teacher-database-rule"/>
+        <index name="_exam_student_id" refColumn="student_id" columns="*" databaseRule="teacher-database-rule"/>
+      </table>
+
+      <!-- 自增主键配置 -->
+      <table name="seq_table" databaseRule="teacher-database-rule">
+        <!-- 自增字段序列
+             name：序列名称
+             type：序列类型，分为三种，breadcrumb、snowflake、ticktock，详细使用请参阅全局序列使用文档
+                   -breadcrumb 属性：cache、incr、start，可不填使用默认配置cache="0" incr="1" start="0"
+                   -snowflake 属性：workerIdWidth、sequenceWidth，可不填使用默认配置workerIdWidth="10" sequenceWidth="12"
+                   -ticktock 属性：workerIdWidth、sequenceWidth，可不填使用默认配置workerIdWidth="3" sequenceWidth="4"
+         -->
+        <sequence name="auto_key_seq" type="breadcrumb" refColumn="auto_key"/>
+      </table>
+
+      <!-- 全局表通配符配置
+           [*] 此通配符表示所有在配置中不存在的表都适用此配置；
+           [prefix_*] 此通配符表示以'prefix_'开头的表都适用此配置；
+           [*_suffix] 此通配符表示以'_suffix'结尾的表都适用此配置；
+           以此类推[prefix_*_suffix]、[prefix_*_middle_*_suffix]都可通过相应的规则匹配；
+       -->
+      <table name="*" type="global"/>
+      <!-- 分片表通配 -->
+      <table name="shard_*" shards="shard_0"/>
+
+      <!-- 独立序列
+           独立于任何表，即可作为表的主键，也可以在用于程序中序列值的生成
+           注：不管是自增主键还是独立配置的序列，都可以通过select xxx.nextval；语法独立获取序列
+      -->
+      <sequence name="independent_seq" type="breadcrumb"/>
+    </virtualDB>
+  </virtualDBs>
+
+  <!-- 分片管理 -->
+  <shardGroups>
+    <!--
+    分片组
+    <属性说明>
+    name：分片组名
+    -->
+    <shardGroup name="shardGroup1">
+      <!--
+      分片域
+      <属性说明>
+      name:域名
+      -->
+      <shardZone name="Beijing Zone">
+        <!--
+        分片
+        <属性配置说明>
+        name:分片名称
+        datasourceGroup:组数据源
+        schema:数据库名称(oracle的user或mysql的schema) -->
+        <shard name="shard_bj_0" dsGroup="group_1" schema="schema0"/>
+        <shard name="shard_bj_1" dsGroup="group_1" schema="schema1"/>
+      </shardZone>
+      <shardZone name="Jiangsu Zone">
+        <shard name="shard_js_0" dsGroup="group_1" schema="schema1"/>
+        <shard name="shard_js_1" dsGroup="group_1" schema="schema1"/>
+      </shardZone>
+    </shardGroup>
+  </shardGroups>
+
+  <!-- 物理数据库集群管理 -->
+  <physicalDBClusters>
+    <!-- 数据库集群: oracle的rac或mysql的复制架构定义
+     <属性配置说明>
+        name:物理数据库集群名称
+        type:数据库类型  （取值约束由xsd控制）
+     -->
+    <physicalDBCluster name="cluster1" type="oracle">
+      <!-- 数据库实例
+       <属性配置说明>
+            name:数据库实例名称
+        hostname:实例主机名或IP
+             sid:当数据库类型为oracle时适用
+              rw:(可选配置)实例读写控制（R读W写D不可用）
+            role:(可选配置)实例角色（M0 M1 S0 S1）
+          status:(可选配置)实例状态（O正常D离线R就绪） -->
+      <dbInstance name="inst_c1_1_w" hostname="192.168.1.24"
+        port="1521" sid="orcla" rw="W" role="M0" status="O"/>
+      <dbInstance name="inst_c1_2_r" hostname="192.168.1.24"
+        port="1521" sid="orcla" rw="R" role="S0" status="O"/>
+    </physicalDBCluster>
+    <physicalDBCluster name="cluster2" type="oracle">
+      <dbInstance name="inst_c2_1_w" hostname="192.168.1.24"
+        port="1521" sid="orclb" rw="W" role="M1" status="O"/>
+      <dbInstance name="inst_c2_2_r" hostname="192.168.1.24"
+        port="1521" sid="orclB" rw="R" role="S1" status="O"/>
+    </physicalDBCluster>
+  </physicalDBClusters>
+
+  <!--数据源管理 -->
+  <dataSources>
+    <!--
+    数据源组:由主备数据源构成
+    <属性配置说明>
+           name:数据源组名称
+    relaCluster:关联的物理数据库集群名称
+    -->
+    <group name="group1" relaCluster="cluster1">
+
+      <dataSource jndiName="" />
+
+      <!--
+      数据源定义
+      <属性配置说明>
+             user:数据库用户名
+              pwd:密码
+       dbInstName:物理数据库实例名称
+         dbDriver:数据库驱动类型  （约束由xsd控制 取值：jdbc/native）
+        -->
+      <dataSource user="root" pwd="33A802D64BD77C69" dbInstName="inst_c1_1_w" dbDriver="jdbc">
+        <params>
+          <!--
+          连接池参数
+          <属性配置说明>
+          min:最小连接数
+          max:最大连接数
+          checkQuery:用于连接有效性验证的SQL语句
+          maintainFrequency:连接池维护的间隔时间（单位秒）
+          timeOut:执行超时时间（单位秒）,默认30秒
+          fetchSize:设置每次交互批量取回的行数（一次查询，返回结果行数较多时，jdbc驱动和数据库会多次交互），默认25
+          preparedStatementCacheSize:preparedStatement缓存数量
+          -->
+          <property name="min" value="10"/>
+          <property name="max" value="100"/>
+          <property name="checkQuery" value="select 'x' from dual"/>
+          <property name="timeOut" value="10"/>
+          <property name="fetchSize" value="25"/>
+          <property name="preparedStatementCacheSize" value="0"/>
+        </params>
+      </dataSource>
+      <dataSource user="root" pwd="33A802D64BD77C69" dbInstName="inst_c1_2_r" dbDriver="jdbc" seq="1">
+        <params>
+          <property name="min" value="10"/>
+          <property name="max" value="100"/>
+          <property name="checkQuery" value="select 'x' from dual"/>
+          <property name="timeOut" value="10"/>
+          <property name="fetchSize" value="25"/>
+          <property name="preparedStatementCacheSize" value="0"/>
+        </params>
+      </dataSource>
+    </group>
+    <group name="group2" relaCluster="cluster2">
+      <dataSource user="root" pwd="33A802D64BD77C69" dbInstName="inst_c2_1_w" dbDriver="jdbc">
+        <params>
+          <property name="min" value="10"/>
+          <property name="max" value="100"/>
+          <property name="checkQuery" value="select 'x' from dual"/>
+          <property name="timeOut" value="10"/>
+          <property name="fetchSize" value="25"/>
+          <property name="preparedStatementCacheSize" value="0"/>
+        </params>
+      </dataSource>
+      <dataSource user="root" pwd="33A802D64BD77C69" dbInstName="inst_c2_2_r" dbDriver="jdbc">
+        <params>
+          <property name="min" value="10"/>
+          <property name="max" value="100"/>
+          <property name="checkQuery" value="select 'x' from dual"/>
+          <property name="timeOut" value="10"/>
+          <property name="fetchSize" value="25"/>
+          <property name="preparedStatementCacheSize" value="0"/>
+        </params>
+      </dataSource>
+    </group>
+  </dataSources>
+</dbShard>

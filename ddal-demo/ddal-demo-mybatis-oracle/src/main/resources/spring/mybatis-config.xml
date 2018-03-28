@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+  <import resource="application.xml"/>
+
+  <bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+    <property name="dataSource" ref="raptorDataSource"/>
+    <property name="mapperLocations" value="classpath*:mybatis/mapper/*.xml"/>
+  </bean>
+
+  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="studio.raptor.ddal.demo.mybatis.oracle.repository"/>
+    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+  </bean>
+
+</beans>

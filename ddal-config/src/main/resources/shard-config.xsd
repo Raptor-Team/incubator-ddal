@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2010 (http://www.altova.com) by shishaomeng (ai) -->
+<xs:schema xmlns="http://ddal.raptor.studio/shard-config" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+		   targetNamespace="http://ddal.raptor.studio/shard-config">
+	<xs:element name="virtualDBs">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="virtualDB" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="virtualDB">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="table" maxOccurs="unbounded"/>
+				<xs:element ref="sequence" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="sqlMaxLimit" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="-1"/>
+						<xs:maxInclusive value="10000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="rmOwner" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:boolean"/>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="name" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="replace"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="shardGroup" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="table">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="index" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="subTable" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="sequence" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="type">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="global"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="shards" type="xs:string"/>
+			<xs:attribute name="actualTables" type="xs:string"/>
+			<xs:attribute name="databaseRule" type="xs:string"/>
+			<xs:attribute name="tableRule" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="index">
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="refColumn" type="xs:string" use="required"/>
+			<xs:attribute name="columns" type="xs:string" use="required"/>
+			<xs:attribute name="shards" type="xs:string"/>
+			<xs:attribute name="actualTables" type="xs:string"/>
+			<xs:attribute name="databaseRule" type="xs:string"/>
+			<xs:attribute name="tableRule" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="subTable">
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="sequence">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="name" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="optional"/>
+			<xs:attribute name="type" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="snowflake"/>
+						<xs:enumeration value="ticktock"/>
+						<xs:enumeration value="breadcrumb"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="refColumn" type="xs:string" use="optional"/>
+			<xs:attribute name="incr" type="xs:integer" use="optional"/>
+			<xs:attribute name="start" type="xs:long" use="optional"/>
+			<xs:attribute name="cache" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="10000"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<!-- TODO 规则校验 -->
+			<xs:attribute name="workerIdWidth" use="optional"/>
+			<xs:attribute name="sequenceWidth" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="name" type="xs:string"/>
+	<xs:element name="property">
+		<xs:complexType>
+			<xs:attribute name="value" type="xs:string" use="required"/>
+			<xs:attribute name="name" use="required" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="shardGroups">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="shardGroup" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="shardGroup">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="shardZone" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="shard" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="shardZone">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="shard" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="shard">
+		<xs:complexType>
+			<xs:attribute name="schema" type="xs:string" use="required"/>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="dsGroup" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="physicalDBClusters">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="physicalDBCluster" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="physicalDBCluster">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="dbInstance" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="type" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="oracle"/>
+						<xs:enumeration value="mysql"/>
+						<xs:enumeration value="h2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="params">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="property" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="group">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="dataSource" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="relaCluster" type="xs:string" use="required"/>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="balance" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="exclude-write"/>
+						<xs:enumeration value="all"/>
+						<xs:enumeration value="none"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="dbInstance">
+		<xs:complexType>
+			<xs:attribute name="status" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="O"/>
+						<xs:enumeration value="D"/>
+						<xs:enumeration value="S"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="role">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="[MS][0-9]"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="rw" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="W"/>
+						<xs:enumeration value="R"/>
+						<xs:enumeration value="D"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="sid" type="xs:string"/>
+			<xs:attribute name="serviceName" type="xs:string"/>
+			<xs:attribute name="port" type="xs:unsignedInt"/>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="hostname" type="xs:string"/>
+			<xs:attribute name="h2dir" type="xs:string"/>
+			<xs:attribute name="h2db" type="xs:string"/>
+			<xs:attribute name="url" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="dataSources">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="group" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="dataSource">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="params" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="jndiName" type="xs:string" use="optional"/>
+			<xs:attribute name="user" type="xs:string" use="optional"/>
+			<xs:attribute name="pwd" type="xs:string" use="optional"/>
+			<xs:attribute name="dbInstName" type="xs:string" use="optional"/>
+			<xs:attribute name="seq" type="xs:int" default="-1" use="optional"/>
+			<xs:attribute name="accessLevel" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="rw"/>
+						<xs:enumeration value="r"/>
+						<xs:enumeration value="block"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="dbDriver" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="jdbc"/>
+						<xs:enumeration value="native"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="dbShard">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="virtualDBs"/>
+				<xs:element ref="shardGroups"/>
+				<xs:element ref="physicalDBClusters"/>
+				<xs:element ref="dataSources"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

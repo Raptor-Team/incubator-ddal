@@ -1,0 +1,145 @@
+<script>
+  var requireJS = [];
+  loadJS(requireJS, "js/views/sequence/console.js");
+</script>
+<div class="animated fadeIn">
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-md-12">
+              <i class="fa fa-cogs"></i> ZK配置
+            </div>
+          </div>
+        </div>
+        <div class="card-block">
+          <div class="form-group row">
+            <label class="col-md-3 form-control-label">ZK连接串：</label>
+            <div class="col-md-9">
+              <div class="form-group row">
+                <div class="col-md-8">
+                  <input id="new-zk-address" type="text" class="form-control"
+                         placeholder="127.0.0.1:2181...">
+                </div>
+                <div class="col-md-4">
+                  <span class="input-group-btn">
+                      <button id="create-connection" type="button" class="btn btn-primary"><i
+                          class="fa fa-search"></i> 连接</button>
+
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr/>
+          <div class="form-group row">
+            <div class="col-md-12">
+              <table class="table table-bordered table-striped table-sm">
+                <thead>
+                <tr>
+                  <th>连接信息</th>
+                  <th>开始时间</th>
+                  <th>持续时长</th>
+                  <th>连接状态</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td id="info-server-string"></td>
+                  <td id="info-time-start"></td>
+                  <td id="info-time-duration"></td>
+                  <td id="info-state"></td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-md-8">
+              <i class="fa fa-align-justify"></i> 序列列表
+            </div>
+            <div class="col-md-4">
+              <select id="center-select" name="select" class="form-control form-control-sm">
+                <option value='0'>请选择业务中心</option>
+              </select>
+            </div>
+          </div>
+          <div  class="row">
+            <div class="col-md-2">
+              <input type="button" value="下载序列模板" id="downloadTemplate">
+            </div>
+            <div class="col-md-2">
+              <form id="uploadForm" method="post" enctype="multipart/form-data">
+                <input type="file" id="fileName" name="fileName">
+                <input type="button" value="导入模板 重置序列" id="uploadTemplate">
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="card-block">
+          <table class="table table-sm table-striped">
+            <thead>
+            <tr>
+              <th style="width: 5%"><input type="checkbox" id="checkboxAll" name="checkbox1"
+                                           value="all"></th>
+              <th style="width: 5%">序号</th>
+              <th style="width: 20%">序列名称</th>
+              <th style="width: 15%">当前值</th>
+              <th style="width: 15%">初始值</th>
+              <th style="width: 15%">步长</th>
+              <th style="width: 25%">操作</th>
+            </tr>
+            </thead>
+            <tr name="table-row-template" style="display: none;">
+              <td><input type="checkbox" name="table-row-checker" value="option1"></td>
+              <td name="table-row-id"></td>
+              <td name="table-row-seq-name"></td>
+              <td name="table-row-seq-now"></td>
+              <td name="table-row-seq-start">1</td>
+              <td name="table-row-seq-step">1</td>
+              <td>
+                <div class="row">
+                  <div class="col-md-12">
+                    <div class="input-group input-group-sm">
+                      <input name="input-seq-new" type="text"
+                             onkeyup="value=this.value.replace(/\D+/g,'')"
+                             class="form-control form-control-sm" placeholder="重置值">
+                      <button name="button-seq-reset" class="input-group-addon btn btn-sm"
+                              style="border-radius: 0px">重置
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tbody id="table-body">
+            </tbody>
+          </table>
+          <!--<ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Prev</a>
+            </li>
+            <li class="page-item active">
+              <a class="page-link" href="#">1</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">2</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">3</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">4</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">Next</a>
+            </li>
+          </ul>-->
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+</div>

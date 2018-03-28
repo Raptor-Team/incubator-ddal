@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<serverConfig xmlns="http://ddal.raptor.studio/server-config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			  xsi:schemaLocation="http://ddal.raptor.studio/server-config">
+	<params>
+		<!-- server设定-->
+		<param name="server.maxFrontendConns">100</param><!-- server会话数量限制--><!-- TODO 注意失效连接回收 -->
+		<param name="server.processors">4</param><!-- 线程数 : 控制server内部线程池大小-->
+		<param name="server.bindIp">0.0.0.0</param><!-- server绑定的IP -->
+		<param name="server.port">8888</param><!-- server服务端口 -->
+		<param name="server.managePort">8889</param><!-- server管理端口 -->
+		<param name="server.charset">gbk</param><!-- 连接字符集 -->
+		<param name="server.maxPacketSize">16777216</param><!-- 16*1024*1024 --><!-- server通信协议包最大大小 -->
+		<param name="server.shutdownFilename">.shutdown</param><!-- 安全关闭标识文件名 -->
+
+		<!-- 周期性维护任务日志 -->
+		<param name="log.timingMaintainer.enabled">true</param>
+
+		<!-- 流量控制 TODO 未实现-->
+		<param name="input_traffic_per_conn">1024</param><!-- byte/s -->
+		<param name="output_traffic_per_conn">1024</param><!-- byte/s -->
+		<param name="output_traffic_per_conn@192.168.1.66">1024</param><!-- byte/s -->
+
+		<!-- socket参数设置 -->
+		<param name="frontend.soRcvbuf">1048576</param><!-- 1024*1024 -->
+		<param name="frontend.soSndbuf">4194304</param><!-- 4*1024*1024 -->
+		<param name="frontend.tcpNodelay">true</param>
+		<param name="frontend.soKeepalive">true</param>
+		<param name="frontend.soReuseaddr">true</param>
+
+		<!-- 分级缓冲池参数设置 -->
+		<param name="bufferpool.firstChunkSize">1024</param>
+		<param name="bufferpool.growthFactor">2</param>
+		<param name="bufferpool.pageSize">1048576</param><!-- 1024*1024 -->
+
+		<!-- 数据一致性保证设置 -->
+		<param name="tx.rollbackProcName">rollback_transaction</param>
+		<param name="tx.commitProcName">commit_transaction</param>
+		<param name="tx.iudProcName">iud</param>
+		<param name="tx.transactionPath">/logs/transaction</param>
+
+		<!-- JMX http适配器配置 -->
+		<param name="mx4j.enable">true</param>
+		<param name="mx4j.host">0.0.0.0</param><!-- 默认监听地址 0.0.0.0 -->
+		<param name="mx4j.port">4444</param><!-- 默认端口号 8899 -->
+		<param name="mx4j.user">m</param>
+		<param name="mx4j.pwd">x</param>
+	</params>
+	<!-- 用户管理 -->
+	<users>
+		<!-- 
+	                 用户定义
+	       name:用户名
+	       pwd:密码
+	    -->
+		<user name="root" pwd="root">
+			<!-- 
+	                        访问策略（仅支持IP）
+	         type:策略类型  accept:允许  reject:拒绝
+	        -->
+			<accessPolicy type="accept">
+				<!-- 
+	                                    支持*通配符
+	            -->
+				<ip>192.168.1.*</ip>
+				<ip>127.0.0.*</ip>
+			</accessPolicy>
+		</user>
+		<user name="root2" pwd="root2">
+			<accessPolicy type="reject">
+				<ip>255.0.0.*</ip>
+			</accessPolicy>
+		</user>
+	</users>
+	<!-- 权限管理 -->
+	<grants>
+		<!-- 
+	                               授权 
+	            user:用户名
+	            vdbName:虚拟db名称
+	        -->
+    <grant user="root" vdbName="crmdb">
+			<rule>
+				<!-- 
+	                    type:数据库对象类型 table\seq
+	                    object:数据库对象列表，使用逗号分隔，支持*通配
+	                    privilege:权限  select,update,insert,delete,create table,create index,alter table,alter index
+	                -->
+					<type>table</type>
+				<object>teacher,student,scores,course</object>
+					<privilege>select,update,insert,delete,create table,create index,alter table,alter index</privilege>
+				</rule>
+				<rule>
+					<type>seq</type>
+					<object>*</object>
+					<privilege>select</privilege>
+				</rule>
+		</grant>
+	</grants>
+</serverConfig>

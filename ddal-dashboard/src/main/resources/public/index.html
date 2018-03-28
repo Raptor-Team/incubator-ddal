@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
+  <meta name="author" content="Łukasz Holeczek">
+  <meta name="keyword"
+        content="Bootstrap,Admin,Template,Open,Source,AngularJS,Angular,Angular2,Angular 2,Angular4,Angular 4,jQuery,CSS,HTML,RWD,Dashboard,React,React.js,Vue,Vue.js">
+  <link rel="shortcut icon" href="img/favicon.png">
+  <title>DDAL控制台</title>
+
+  <!-- Icons -->
+  <link href="css/font-awesome.min.css" rel="stylesheet">
+  <link href="css/simple-line-icons.css" rel="stylesheet">
+  <link href="css/notie.min.css" rel="stylesheet">
+  <link href="css/sweetalert2.min.css" rel="stylesheet">
+  <!--<link href="css/bootstrap.min.css" rel="stylesheet">-->
+  <link href="css/bootstrap-select.min.css" rel="stylesheet">
+  <link href="css/ajax-bootstrap-select.min.css" rel="stylesheet">
+
+
+  <style>
+    .notie-container {
+      z-index:1024;
+      font-size: .875rem;
+    }
+    .notie-textbox {
+      padding:13px;
+    }
+  </style>
+
+  <!-- Main styles for this application -->
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/style-custom.css" rel="stylesheet">
+
+</head>
+<body class="app header-fixed sidebar-fixed aside-menu-fixed aside-menu-hidden">
+<header class="app-header navbar">
+  <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button">&#9776;</button>
+  <a class="navbar-brand" href="#"></a>
+  <ul class="nav navbar-nav d-md-down-none">
+    <li class="nav-item">
+      <a class="nav-link navbar-toggler sidebar-toggler" href="#">&#9776;</a>
+    </li>
+  </ul>
+  <ul class="nav navbar-nav ml-auto">
+    <li class="nav-item d-md-down-none">
+      <a class="nav-link" href="#"><i class="icon-bell"></i>
+      </a>
+    </li>
+
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle nav-link" data-toggle="dropdown" href="#" role="button"
+         aria-haspopup="true" aria-expanded="false">
+        <span class="d-md-down-none">管理员</span>
+      </a>
+      <div class="dropdown-menu dropdown-menu-right">
+        <div class="dropdown-header text-center">
+          <strong>设置</strong>
+        </div>
+        <a class="dropdown-item" href="#"><i class="fa fa-lock"></i> 退出</a>
+      </div>
+    </li>
+    <li class="nav-item d-md-down-none">
+      <a class="nav-link navbar-toggler aside-menu-toggler" href="#">&#9776;</a>
+    </li>
+
+  </ul>
+</header>
+
+<div class="app-body">
+  <div class="sidebar">
+    <nav class="sidebar-nav">
+      <ul class="nav">
+        <!--<li class="nav-item">-->
+          <!--<a class="nav-link" href="main.html"><i class="icon-speedometer"></i> Dashboard </a>-->
+        <!--</li>-->
+        <!--&lt;!&ndash; 参考 &ndash;&gt;-->
+       <!--<li class="nav-title">-->
+         <!--UI参考-->
+       <!--</li>-->
+       <!--<li class="nav-item">-->
+         <!--<a class="nav-link" href="components/buttons.html"><i class="icon-puzzle"></i>buttons</a>-->
+       <!--</li>-->
+       <!--<li class="nav-item">-->
+         <!--<a class="nav-link" href="components/cards.html"><i class="icon-puzzle"></i>cards</a>-->
+       <!--</li>-->
+       <!--<li class="nav-item">-->
+         <!--<a class="nav-link" href="components/forms.html"><i class="icon-puzzle"></i>forms</a>-->
+       <!--</li>-->
+       <!--<li class="nav-item">-->
+         <!--<a class="nav-link" href="components/modals.html"><i class="icon-puzzle"></i>modals</a>-->
+       <!--</li>-->
+       <!--<li class="nav-item">-->
+         <!--<a class="nav-link" href="components/social-buttons.html"><i class="icon-puzzle"></i>social-buttons</a>-->
+       <!--</li>-->
+       <!--<li class="nav-item">-->
+         <!--<a class="nav-link" href="components/switches.html"><i class="icon-puzzle"></i>switches</a>-->
+       <!--</li>-->
+       <!--<li class="nav-item">-->
+         <!--<a class="nav-link" href="components/tables.html"><i class="icon-puzzle"></i>tables</a>-->
+       <!--</li>-->
+       <!--<li class="nav-item">-->
+         <!--<a class="nav-link" href="components/tabs.html"><i class="icon-puzzle"></i>tabs</a>-->
+       <!--</li>-->
+       <!--<li class="nav-item">-->
+         <!--<a class="nav-link" href="components/buttons.html"><i class="icon-puzzle"></i>buttons</a>-->
+       <!--</li>-->
+       <!--&lt;!&ndash; 参考 &ndash;&gt;-->
+        <!--<li class="nav-title">-->
+          <!--SQL监控-->
+        <!--</li>-->
+        <!--<li class="nav-item">-->
+          <!--<a class="nav-link" href="components/switches.html"><i class="icon-puzzle"></i> 慢SQL</a>-->
+        <!--</li>-->
+
+        <!--<li class="nav-item">-->
+          <!--<a class="nav-link" href="components/switches.html"><i class="icon-puzzle"></i> SQL替换</a>-->
+        <!--</li>-->
+
+        <!--<li class="nav-title">-->
+          <!--安全控制-->
+        <!--</li>-->
+        <!--<li class="nav-item">-->
+          <!--<a class="nav-link" href="components/switches.html"><i class="icon-puzzle"></i> SQL黑名单</a>-->
+        <!--</li>-->
+        <!--<li class="nav-item">-->
+          <!--<a class="nav-link" href="components/switches.html"><i class="icon-puzzle"></i> IP黑白名单</a>-->
+        <!--</li>-->
+
+        <!--<li class="nav-title">-->
+          <!--应用管理-->
+        <!--</li>-->
+        <!--<li class="nav-item">-->
+          <!--<a class="nav-link" href="appmanagement/bizcenter.html"><i class="icon-puzzle"></i> 中心管理</a>-->
+        <!--</li>-->
+        <!--<li class="nav-item">-->
+          <!--<a class="nav-link" href="appmanagement/bizapp.html"><i class="icon-puzzle"></i> 应用管理</a>-->
+        <!--</li>-->
+        <li class="nav-title">
+          全局序列
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="sequence/console.html"><i class="icon-puzzle"></i> 序列管理</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+
+  <!-- Main content -->
+  <main class="main">
+
+    <!-- Breadcrumb -->
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item breadcrumb-title">仪表盘（主面板）</li>
+      <li class="breadcrumb-menu d-md-down-none">
+        <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
+          <a class="btn btn-secondary" href="#"><i class="icon-speech"></i></a>
+          <a class="btn btn-secondary" href="#"><i class="icon-graph"></i> &nbsp;Dashboard</a>
+          <a class="btn btn-secondary" href="#"><i class="icon-settings"></i> &nbsp;Settings</a>
+        </div>
+      </li>
+    </ol>
+
+
+    <div class="container-fluid">
+      <div id="ui-view"></div>
+    </div>
+    <!-- /.conainer-fluid -->
+  </main>
+</div>
+
+<footer class="app-footer">
+  <a href="http://raptor.studio">DDAL Dashboard</a> &copy; 2017 Raptor Studio.
+  <span class="float-right">Powered by <a href="http://raptor.studio">Raptor Studio</a>
+        </span>
+</footer>
+
+<script type="text/template" id="loading-tpl">
+  <div style="text-align: center">
+    <img width="120" src="img/loading3.gif"/>
+  </div>
+</script>
+
+<!-- Bootstrap and necessary plugins -->
+<script src="js/libs/jquery.min.js"></script>
+<script src="js/libs/jquery.form.min.js"></script>
+<script src="js/libs/tether.min.js"></script>
+<script src="js/libs/bootstrap.min.js"></script>
+<script src="js/libs/pace.min.js"></script>
+<script src="js/libs/juicer-min.js"></script>
+<!--<script src="js/libs/sweetalert.min.js"></script>-->
+<script src="js/libs/sweetalert2.min.js"></script>
+
+<!-- Plugins and scripts required by all views -->
+<script src="js/libs/Chart.min.js"></script>
+<script src="js/libs/notie.min.js"></script>
+<script src="js/libs/bootstrap-select.js"></script>
+<script src="js/libs/ajax-bootstrap-select.js"></script>
+<script src="js/libs/ajax-bootstrap-select.zh-CN.js"></script>
+
+<!-- GenesisUI main scripts -->
+<script src="js/app.js"></script>
+</body>
+</html>

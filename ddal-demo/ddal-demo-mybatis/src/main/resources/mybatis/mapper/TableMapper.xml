@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="studio.raptor.ddal.demo.mybatis.repository.TableRepository">
+  <resultMap id="baseResultMap" type="studio.raptor.ddal.demo.mybatis.entity.Table">
+    <result column="id" jdbcType="INTEGER" property="id"/>
+    <result column="name" jdbcType="VARCHAR" property="name"/>
+    <result column="state" jdbcType="INTEGER" property="state"/>
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+  </resultMap>
+
+  <sql id="baseColumnList">
+    id,
+    name,
+    state,
+    create_time
+  </sql>
+  <select id="getTableById" parameterType="Long" resultMap="baseResultMap">
+    SELECT
+    <include refid="baseColumnList"/>
+    FROM `ddal_table` where id= #{id, jdbcType=INTEGER}
+  </select>
+
+  <insert id="createTable" parameterType="map">
+    INSERT INTO `ddal_table`(
+    <include refid="baseColumnList"/>
+    )
+    VALUES (
+    #{id,jdbcType=INTEGER},
+    #{name,jdbcType=VARCHAR},
+    #{state,jdbcType=INTEGER},
+    #{createTime,jdbcType=TIMESTAMP}
+    )
+  </insert>
+</mapper>

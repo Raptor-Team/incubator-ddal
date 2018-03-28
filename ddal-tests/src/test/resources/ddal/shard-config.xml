@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dbShard xmlns="http://ddal.raptor.studio/shard-config"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://ddal.raptor.studio/shard-config ">
+  <!-- 虚拟数据库管理 -->
+  <virtualDBs>
+    <virtualDB name="school" shardGroup="shardGroup1" rmOwner="true" sqlMaxLimit="-1">
+      <table name="teacher" databaseRule="teacher-database-rule"/>
+      <table name="student" databaseRule="sno-database-rule"/>
+
+      <!-- 非分片字段索引配置 -->
+      <table name="scores" databaseRule="sno-database-rule">
+        <index name="_scores_cno" refColumn="cno" columns="*" databaseRule="cno-rule"/>
+      </table>
+
+      <table name="sign_records" shards="shard_0" actualTables="sign_records_0, sign_records_1" tableRule="id-mod2-rule"/>
+
+      <table name="course" type="global"/>
+      <table name="sign_position_spec" type="global"/>
+      <table name="multi_shard_table" databaseRule="multi-shard-database-rule"/>
+
+      <table name="*" type="global"/>
+
+      <!--<table name="single_*" shards="shard_2"/>-->
+
+      <!-- 分片表库内分表配置 -->
+      <table name="table_shard_test" shards="shard_0,shard_1" databaseRule="id-mod2-rule"
+        actualTables="table_shard_test_0,table_shard_test_1" tableRule="code-mod2-rule"/>
+
+      <!-- 自增字段序列配置 -->
+      <table name="auto_increment" databaseRule="id-rule">
+        <sequence type="breadcrumb" name="auto_key_seq" refColumn="auto_key"/>
+      </table>
+
+      <!-- 分片表库内分表配置 -->
+      <table name="table_shard_test" shards="shard_0,shard_1" databaseRule="id-mod2-rule"
+        actualTables="table_shard_test_0,table_shard_test_1" tableRule="code-mod2-rule"/>
+
+      <!-- 多分片规则支持 -->
+      <table name="substring_test" shards="shard_0,shard_1" databaseRule="substring-db-rule"/>
+      <table name="time_test" shards="shard_0,shard_1" databaseRule="time-db-rule"/>
+
+      <table name="aglori_test" shards="shard_0,shard_1" databaseRule="test-rule"/>
+
+      <!-- 独立序列配置 -->
+      <sequence type="breadcrumb" name="independent_seq"/>
+
+    </virtualDB>
+  </virtualDBs>
+  <shardGroups>
+    <shardGroup name="shardGroup1">
+      <shard name="shard_0" dsGroup="group_1" schema="ddal_test_0"/>
+      <shard name="shard_1" dsGroup="group_1" schema="ddal_test_1"/>
+      <shard name="shard_2" dsGroup="group_1" schema="ddal_test_2"/>
+      <shard name="shard_3" dsGroup="group_1" schema="ddal_test_3"/>
+    </shardGroup>
+  </shardGroups>
+  <!-- 物理数据库集群管理 -->
+  <physicalDBClusters>
+    <physicalDBCluster name="cluster1" type="h2">
+      <dbInstance name="inst_w_1" hostname="" port="0" h2dir="~" h2db="db_w" sid="" rw="W" role="M0" status="O"/>
+      <dbInstance name="inst_r_1" hostname="" port="0" h2dir="~" h2db="db_r_1" sid="" rw="R" role="M1" status="O"/>
+      <dbInstance name="inst_r_2" hostname="" port="0" h2dir="~" h2db="db_r_2" sid="" rw="R" role="M1" status="O"/>
+      <dbInstance name="inst_r_3" hostname="" port="0" h2dir="~" h2db="db_r_3" sid="" rw="R" role="M1" status="O"/>
+    </physicalDBCluster>
+  </physicalDBClusters>
+  <!--数据源管理-->
+  <dataSources>
+    <group name="group_1" relaCluster="cluster1">
+      <dataSource user="root" dbInstName="inst_w_1" dbDriver="jdbc" pwd="root">
+        <params>
+          <property name="minIdle" value="1"/>
+          <property name="maxIdle" value="5"/>
+          <property name="maxTotal" value="10"/>
+        </params>
+      </dataSource>
+      <dataSource user="root" dbInstName="inst_r_1" dbDriver="jdbc" pwd="root" seq="1">
+        <params>
+          <property name="minIdle" value="1"/>
+          <property name="maxIdle" value="5"/>
+          <property name="maxTotal" value="10"/>
+        </params>
+      </dataSource>
+      <dataSource user="root" dbInstName="inst_r_3" dbDriver="jdbc" pwd="root" seq="3">
+        <params>
+          <property name="minIdle" value="1"/>
+          <property name="maxIdle" value="5"/>
+          <property name="maxTotal" value="10"/>
+        </params>
+      </dataSource>
+      <dataSource user="root" dbInstName="inst_r_2" dbDriver="jdbc" pwd="root" seq="2">
+        <params>
+          <property name="minIdle" value="1"/>
+          <property name="maxIdle" value="5"/>
+          <property name="maxTotal" value="10"/>
+        </params>
+      </dataSource>
+    </group>
+  </dataSources>
+</dbShard>

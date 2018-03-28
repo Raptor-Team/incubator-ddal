@@ -1,0 +1,115 @@
+.badge {
+  padding: .3em .4em;
+}
+
+table .btn-sm {
+  padding: .125rem .25rem;
+}
+
+.swal2-modal .swal2-validationerror {
+  margin: 10px -20px;
+}
+
+.table {
+  margin-bottom:0;
+}
+
+.pagination {
+  margin-bottom: 0;
+  -webkit-margin-after: 0;
+}
+
+.bootstrap-select.btn-group .dropdown-menu {
+  border-radius: .2rem;
+}
+
+.bootstrap-select.btn-group .dropdown-menu li {
+  padding: .875rem;
+}
+
+.bootstrap-select.btn-group .dropdown-menu li.dropdown-header {
+  padding: .4rem .875rem !important;
+}
+
+
+
+.bootstrap-select.btn-group .dropdown-menu li a.opt {
+  padding-left: 0;
+}
+
+.bootstrap-select .status {
+  color: #b0bec5;
+  font-style: normal;
+  margin-bottom: 0;
+  padding: 10px 20px 10px 15px
+}
+
+.btn-default {
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}
+.btn-default:focus,
+.btn-default.focus {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #8c8c8c;
+}
+.btn-default:hover {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+.btn-default:active,
+.btn-default.active,
+.open > .dropdown-toggle.btn-default {
+  color: #333;
+  background-color: #e6e6e6;
+  border-color: #adadad;
+}
+.btn-default:active:hover,
+.btn-default.active:hover,
+.open > .dropdown-toggle.btn-default:hover,
+.btn-default:active:focus,
+.btn-default.active:focus,
+.open > .dropdown-toggle.btn-default:focus,
+.btn-default:active.focus,
+.btn-default.active.focus,
+.open > .dropdown-toggle.btn-default.focus {
+  color: #333;
+  background-color: #d4d4d4;
+  border-color: #8c8c8c;
+}
+.btn-default:active,
+.btn-default.active,
+.open > .dropdown-toggle.btn-default {
+  background-image: none;
+}
+.btn-default.disabled:hover,
+.btn-default[disabled]:hover,
+fieldset[disabled] .btn-default:hover,
+.btn-default.disabled:focus,
+.btn-default[disabled]:focus,
+fieldset[disabled] .btn-default:focus,
+.btn-default.disabled.focus,
+.btn-default[disabled].focus,
+fieldset[disabled] .btn-default.focus {
+  background-color: #fff;
+  border-color: #ccc;
+}
+.btn-default .badge {
+  color: #fff;
+  background-color: #333;
+}
+
+/* sweet alert customize*/
+.swal2-modal {
+  border-radius: 0;
+}
+
+.swal2-modal .swal2-styled {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+/* sweet alert customize end*/

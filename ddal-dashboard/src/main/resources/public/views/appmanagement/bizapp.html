@@ -1,0 +1,124 @@
+<script>
+  var requireJS = [];
+  loadJS(requireJS, "js/views/bizapp.js");
+</script>
+<div class="animated fadeIn">
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-plus-circle"></i>新应用接入
+        </div>
+        <div class="card-block">
+          <div class="row">
+            <div class="form-group col-sm-6" id="ddal-app-name-div">
+              <label for="ddal-app-name">应用名称</label>
+              <input id="ddal-app-name" data-pdiv="ddal-app-name-div" name="ddal-app-name"
+                     class="form-control required" placeholder="">
+              <!--<span class="help-block">Please enter your email</span>-->
+            </div>
+
+            <div class="form-group col-sm-6" id="ddal-app-center-div">
+              <label for="ddal-app-center">应用所属中心</label>
+              <select id="ddal-app-center" data-pdiv="ddal-app-center-div" name="ddal-app-center"
+                     class="form-control required" data-live-search="true">
+              </select>
+              <!--<span class="help-block">Please enter your email</span>-->
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="form-group col-sm-8" id="ddal-app-code-div">
+              <label for="ddal-app-code">应用地址（IP）</label>
+              <input id="ddal-app-code" data-pdiv="ddal-app-code-div" name="ddal-app-code"
+                     class="form-control required" placeholder="">
+              <!--<span class="help-block">Please enter your password</span>-->
+            </div>
+            <div class="form-group col-sm-4" id="ddal-app-desc-div">
+              <label for="ddal-app-desc">应用端口（PORT）</label>
+              <input type="number" id="ddal-app-desc" data-pdiv="ddal-app-desc-div"
+                     name="ddal-app-desc"
+                     class="form-control required" placeholder="">
+              <!--<span class="help-block">Please enter your password</span>-->
+            </div>
+          </div>
+        </div>
+        <div class="card-footer">
+          <button type="submit" class="btn btn-sm btn-primary" id="bizapp-btn-submit"><i
+              class="fa fa-dot-circle-o"></i> 保存
+          </button>
+          <button type="reset" class="btn btn-sm btn-danger" id="bizapp-btn-reset"><i
+              class="fa fa-ban"></i> 重置
+          </button>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <div class="card">
+        <div class="card-header">
+          <i class="fa fa-align-justify"></i> 已接入应用查询
+        </div>
+        <div class="card-block">
+          <div id="app-list-table-container"></div>
+          <nav>
+            <ul class="pagination" id="app-list-pagination">
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+    <!--/.col-->
+  </div>
+
+  <!--/.row-->
+</div>
+
+<script id="center-list-table-row" type="text/template">
+  <table id="center-list-table" class="table fadeIn">
+    <thead>
+    <tr>
+      <th>中心名称</th>
+      <th>中心编码</th>
+      <!--<th>状态</th>-->
+      <th>注册时间</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {@each centerList as center}
+    <tr>
+      <td>${center.name}</td>
+      <td>${center.code}</td>
+      <!--{@if center.status == 'VALID'}-->
+      <!--<td><span class="badge badge-success">${center.status}</span></td>-->
+      <!--{@else}-->
+      <!--<td><span class="badge badge-default">${center.status}</span></td>-->
+      <!--{@/if}-->
+      <td>${center.registerTime}</td>
+      <td>
+        <button type="button" data-center-id="${center.id}" data-center-code="${center.code}"
+                data-center-name="${center.name}" class="btn btn-sm btn-danger btn-del-center"><i
+            class="fa fa-trash"></i>&nbsp;删除
+        </button>
+      </td>
+    </tr>
+    {@/each}
+    </tbody>
+  </table>
+</script>
+
+<script id="center-list-nav" type="text/template">
+  {@if first == false}
+  <li class="page-item"><a data-paging-number="${number}" data-paging-type="pre"
+                           class="page-link center-list-nav" href="#">上一页</a></li>
+  {@/if}
+  {@if last == false}
+  <li class="page-item"><a data-paging-number="${number}" data-paging-type="next"
+                           class="page-link center-list-nav" href="#">下一页</a></li>
+  {@/if}
+</script>

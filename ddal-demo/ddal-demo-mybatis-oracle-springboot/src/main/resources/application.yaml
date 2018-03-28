@@ -1,0 +1,11 @@
+server:
+  port: 8090
+logging:
+  level:
+    root: info
+    studio.raptor: info
+    studio.raptor.ddal.core.connection: info
+spring:
+  http:
+    encoding:
+      charset: UTF-8

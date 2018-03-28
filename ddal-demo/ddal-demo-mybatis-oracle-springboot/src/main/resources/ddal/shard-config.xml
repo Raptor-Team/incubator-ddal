@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<dbShard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://ddal.raptor.studio/shard-config"
+  xsi:schemaLocation="http://ddal.raptor.studio/shard-config">
+  <!-- 虚拟数据库管理 -->
+  <virtualDBs>
+    <virtualDB name="vdb" rmOwner="true" shardGroup="shardGroup1" sqlMaxLimit="-1">
+      <table databaseRule="database-rule" name="customer"/>
+      <table tableRule="customer_profile-table-rule" shards="shard_0" name="customer_profile" actualTables="customer_profile_0, customer_profile_1"/>
+    </virtualDB>
+  </virtualDBs>
+  <shardGroups>
+    <shardGroup name="shardGroup1">
+      <shard dsGroup="group_1" name="shard_0" schema="ddal_schema_0"/>
+      <shard dsGroup="group_1" name="shard_1" schema="ddal_schema_1"/>
+      <shard dsGroup="group_1" name="shard_2" schema="ddal_schema_2"/>
+      <shard dsGroup="group_1" name="shard_3" schema="ddal_schema_3"/>
+    </shardGroup>
+  </shardGroups>
+  <!-- 物理数据库集群管理 -->
+  <physicalDBClusters>
+    <physicalDBCluster name="cluster1" type="mysql">
+      <dbInstance hostname="127.0.0.1" name="inst1" port="3307" role="M0" rw="W" sid="" status="O"/>
+      <dbInstance hostname="127.0.0.1" name="inst2" port="3307" role="M0" rw="R" sid="" status="O"/>
+      <!--<dbInstance hostname="192.168.199.24" name="inst2" port="1521" role="M0" rw="R" sid="orcla" status="O"/>-->
+    </physicalDBCluster>
+  </physicalDBClusters>
+  <!--数据源管理-->
+  <dataSources>
+    <group name="group_1" relaCluster="cluster1">
+      <dataSource dbDriver="jdbc" dbInstName="inst1" pwd="app123" user="app">
+        <params>
+          <property name="minIdle" value="1"/>
+          <property name="maxIdle" value="5"/>
+          <property name="maxTotal" value="30"/>
+          <!-- 开启Oracle驱动的客户端语句缓存 -->
+          <!--<property name="oracle.jdbc.implicitStatementCacheSize" value="50" />-->
+        </params>
+      </dataSource>
+      <dataSource dbDriver="jdbc" dbInstName="inst2" pwd="app123" user="app">
+        <params>
+          <property name="minIdle" value="1"/>
+          <property name="maxIdle" value="5"/>
+          <property name="maxTotal" value="10"/>
+          <!--<property name="timeBetweenEvictionRunsMillis" value="5000"/>-->
+          <!--<property name="testWhileIdle" value="true"/>-->
+        </params>
+      </dataSource>
+    </group>
+  </dataSources>
+</dbShard>

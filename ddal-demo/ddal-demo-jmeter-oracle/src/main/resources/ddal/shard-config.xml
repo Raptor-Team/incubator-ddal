@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dbShard xmlns="http://ddal.raptor.studio/shard-config"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://ddal.raptor.studio/shard-config">
+
+  <!-- 虚拟数据库管理 -->
+  <virtualDBs>
+    <virtualDB name="school" shardGroup="shardGroup1" rmOwner="true" sqlMaxLimit="-1">
+      <table name="teacher" databaseRule="teacher-database-rule"/>
+      <table name="student" databaseRule="sno-database-rule"/>
+      <table name="scores" databaseRule="sno-database-rule"/>
+      <table name="t_fatigue_testing" databaseRule="t-fatigue-testing-database-rule"/>
+      <table name="course" type="global"/>
+    </virtualDB>
+  </virtualDBs>
+
+  <!-- 分片组 -->
+  <shardGroups>
+    <shardGroup name="shardGroup1">
+      <shard name="shard_0" dsGroup="group_1" schema="ddal_test_0"/>
+      <shard name="shard_1" dsGroup="group_2" schema="ddal_test_1"/>
+      <shard name="shard_2" dsGroup="group_3" schema="ddal_test_2"/>
+      <shard name="shard_3" dsGroup="group_4" schema="ddal_test_3"/>
+      <shard name="shard_4" dsGroup="group_5" schema="ddal_test_4"/>
+    </shardGroup>
+  </shardGroups>
+
+  <!-- 物理数据库集群管理 -->
+  <physicalDBClusters>
+    <physicalDBCluster name="cluster1" type="oracle">
+      <dbInstance name="inst1" hostname="132.224.197.67" port="1621" sid="pass1" rw="W" role="M0"
+        status="O"/>
+    </physicalDBCluster>
+    <physicalDBCluster name="cluster2" type="oracle">
+      <dbInstance name="inst1" hostname="132.224.197.68" port="1621" sid="pass2" rw="W" role="M0"
+        status="O"/>
+    </physicalDBCluster>
+    <physicalDBCluster name="cluster3" type="oracle">
+      <dbInstance name="inst1" hostname="132.224.197.69" port="1621" sid="pass3" rw="W" role="M0"
+        status="O"/>
+    </physicalDBCluster>
+    <physicalDBCluster name="cluster4" type="oracle">
+      <dbInstance name="inst1" hostname="132.224.197.70" port="1621" sid="pass4" rw="W" role="M0"
+        status="O"/>
+    </physicalDBCluster>
+    <physicalDBCluster name="cluster5" type="oracle">
+      <dbInstance name="inst1" hostname="132.224.197.71" port="1621" sid="pass5" rw="W" role="M0"
+        status="O"/>
+    </physicalDBCluster>
+  </physicalDBClusters>
+  <!--数据源管理-->
+  <dataSources>
+    <group name="group_1" relaCluster="cluster1">
+      <dataSource user="ddal_test_0" pwd="ddal_test123" dbInstName="inst1" dbDriver="jdbc">
+        <params>
+          <property name="minIdle" value="200"/>
+          <property name="maxIdle" value="200"/>
+          <property name="maxTotal" value="200"/>
+          <property name="timeBetweenEvictionRunsMillis" value="5000"/>
+          <property name="testWhileIdle" value="true"/>
+        </params>
+      </dataSource>
+    </group>
+    <group name="group_2" relaCluster="cluster2">
+      <dataSource user="ddal_test_1" pwd="ddal_test123" dbInstName="inst1" dbDriver="jdbc">
+        <params>
+          <property name="minIdle" value="200"/>
+          <property name="maxIdle" value="200"/>
+          <property name="maxTotal" value="200"/>
+          <property name="timeBetweenEvictionRunsMillis" value="5000"/>
+          <property name="testWhileIdle" value="true"/>
+        </params>
+      </dataSource>
+    </group>
+    <group name="group_3" relaCluster="cluster3">
+      <dataSource user="ddal_test_2" pwd="ddal_test123" dbInstName="inst1" dbDriver="jdbc">
+        <params>
+          <property name="minIdle" value="200"/>
+          <property name="maxIdle" value="200"/>
+          <property name="maxTotal" value="200"/>
+          <property name="timeBetweenEvictionRunsMillis" value="5000"/>
+          <property name="testWhileIdle" value="true"/>
+        </params>
+      </dataSource>
+    </group>
+    <group name="group_4" relaCluster="cluster4">
+      <dataSource user="ddal_test_3" pwd="ddal_test123" dbInstName="inst1" dbDriver="jdbc">
+        <params>
+          <property name="minIdle" value="200"/>
+          <property name="maxIdle" value="200"/>
+          <property name="maxTotal" value="200"/>
+          <property name="timeBetweenEvictionRunsMillis" value="5000"/>
+          <property name="testWhileIdle" value="true"/>
+        </params>
+      </dataSource>
+    </group>
+    <group name="group_5" relaCluster="cluster5">
+      <dataSource user="ddal_test_4" pwd="ddal_test123" dbInstName="inst1" dbDriver="jdbc">
+        <params>
+          <property name="minIdle" value="200"/>
+          <property name="maxIdle" value="200"/>
+          <property name="maxTotal" value="200"/>
+          <property name="timeBetweenEvictionRunsMillis" value="5000"/>
+          <property name="testWhileIdle" value="true"/>
+        </params>
+      </dataSource>
+    </group>
+  </dataSources>
+  <!-- 分片管理 -->
+</dbShard>

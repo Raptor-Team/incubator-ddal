@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one or more
+  ~ contributor license agreements.  See the NOTICE file distributed with
+  ~ this work for additional information regarding copyright ownership.
+  ~ The ASF licenses this file to You under the Apache License, Version 2.0
+  ~ (the "License"); you may not use this file except in compliance with
+  ~ the License.  You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<beans xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:tx="http://www.springframework.org/schema/tx"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+  <bean class="studio.raptor.ddal.jdbc.RaptorDataSource" id="raptorDataSource">
+    <constructor-arg name="databaseDialect" value="oracle"/>
+    <constructor-arg name="virtualDb" value="vdb"/>
+  </bean>
+
+  <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+    <property name="dataSource" ref="raptorDataSource" />
+  </bean>
+
+  <context:component-scan base-package="studio.raptor.ddal.demo.mysql.springweb.dao"/>
+  <context:component-scan base-package="studio.raptor.ddal.demo.mysql.springweb.service"/>
+
+  <bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">
+    <property name="dataSource" ref="raptorDataSource"/>
+  </bean>
+  <tx:annotation-driven transaction-manager="transactionManager"/>
+</beans>

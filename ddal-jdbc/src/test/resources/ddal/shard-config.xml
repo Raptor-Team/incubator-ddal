@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dbShard xmlns="http://ddal.raptor.studio/shard-config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://ddal.raptor.studio/shard-config">
+    <!-- 虚拟数据库管理 -->
+    <virtualDBs>
+        <virtualDB name="crmdb" shardGroup="shardGroup1" rmOwner="true" sqlMaxLimit="-1">
+            <table name="customer" databaseRule="customer-database-rule"/>
+            <table name="account" databaseRule="account-database-rule"/>
+        </virtualDB>
+        <virtualDB name="jtdb" shardGroup="shardGroup1" rmOwner="true" sqlMaxLimit="-1">
+            <table name="customer" databaseRule="customer-database-rule"/>
+            <table name="account" databaseRule="account-database-rule"/>
+        </virtualDB>
+        <virtualDB name="bssdb" shardGroup="shardGroup1" rmOwner="true" sqlMaxLimit="-1">
+            <table name="customer" databaseRule="customer-database-rule"/>
+            <table name="account" databaseRule="account-database-rule"/>
+        </virtualDB>
+    </virtualDBs>
+
+    <shardGroups>
+        <shardGroup name="shardGroup1">
+            <shard name="shard_0" dsGroup="group_1" schema="schema0"/>
+            <shard name="shard_1" dsGroup="group_1" schema="schema1"/>
+        </shardGroup>
+    </shardGroups>
+    <!-- 物理数据库集群管理 -->
+    <physicalDBClusters>
+        <physicalDBCluster name="cluster1" type="h2">
+            <!--<dbInstance name="inst1" hostname="192.168.199.23" port="3306" sid="" rw="W" role="M0" status="O"/>-->
+            <!--<dbInstance name="inst2" hostname="192.168.199.23" port="3306" sid="" rw="R" role="M1" status="O"/>-->
+            <dbInstance name="inst1" hostname="" port="0" h2dir="~" h2db="db1" sid="" rw="W" role="M0" status="O"/>
+            <dbInstance name="inst2" hostname="" port="0" h2dir="~" h2db="db1" sid="" rw="R" role="M1" status="O"/>
+        </physicalDBCluster>
+    </physicalDBClusters>
+    <!--数据源管理-->
+    <dataSources>
+        <group name="group_1" relaCluster="cluster1">
+            <dataSource user="sa" dbInstName="inst1" accessLevel="rw" dbDriver="jdbc" pwd="sa">
+                <params>
+                    <property name="minIdle" value="1"/>
+                    <property name="maxIdle" value="5"/>
+                    <property name="maxTotal" value="10" />
+                    <property name="timeBetweenEvictionRunsMillis" value="5000" />
+                    <property name="maxWaitMillis" value="10000" />
+                    <property name="testWhileIdle" value="true" />
+                    <property name="checkQuery" value="select 'x' from dual"/>
+                </params>
+            </dataSource>
+            <dataSource user="sa" dbInstName="inst2" accessLevel="r" dbDriver="jdbc" pwd="sa">
+                <params>
+                    <property name="minIdle" value="1"/>
+                    <property name="maxIdle" value="5"/>
+                    <property name="maxTotal" value="10" />
+                    <property name="timeBetweenEvictionRunsMillis" value="5000" />
+                    <property name="maxWaitMillis" value="10000" />
+                    <property name="testWhileIdle" value="true" />
+                    <property name="checkQuery" value="select 'x' from dual"/>
+                </params>
+            </dataSource>
+        </group>
+    </dataSources>
+</dbShard>

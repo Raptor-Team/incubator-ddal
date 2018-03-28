@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>studio.raptor</groupId>
+  <artifactId>raptor-ddal</artifactId>
+  <packaging>pom</packaging>
+  <version>3.1.0-SNAPSHOT</version>
+
+  <name>Raptor DDAL</name>
+  <description>DAL middleware used for shard relational database.</description>
+  <url>http://git.oschina.net/f150/raptor-ddal</url>
+
+  <scm>
+    <url>https://git.oschina.net/f150/raptor-ddal.git</url>
+  </scm>
+
+  <licenses>
+    <license>
+      <name>Apache 2</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>Raptor Team</id>
+      <name>Raptor Team</name>
+      <email>rd.raptor.team@gmail.com</email>
+    </developer>
+  </developers>
+
+  <modules>
+    <module>ddal-common</module>
+    <module>ddal-core</module>
+    <module>ddal-config</module>
+    <module>ddal-jdbc</module>
+    <module>ddal-server</module>
+    <module>ddal-tests</module>
+    <module>ddal-benchmark</module>
+    <module>ddal-sqlparser</module>
+  </modules>
+
+  <properties>
+    <java.version>1.7</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <junit.version>4.12</junit.version>
+    <netty.version>4.1.6.Final</netty.version>
+    <guava.version>20.0</guava.version>
+    <slf4j.version>1.7.21</slf4j.version>
+    <log4j.version>2.7</log4j.version>
+    <!--<cglib.version>3.2.4</cglib.version>-->
+    <mockito.version>1.10.19</mockito.version>
+    <hamcrest.version>1.3</hamcrest.version>
+    <jsr305.version>3.0.1</jsr305.version>
+    <mysql.connector.version>5.1.40</mysql.connector.version>
+    <h2database.version>1.4.193</h2database.version>
+    <commons-pool2.version>2.4.2</commons-pool2.version>
+    <commons-collectios4.version>4.1</commons-collectios4.version>
+    <dbcp2.version>2.1.1</dbcp2.version>
+    <airlift.version>0.139</airlift.version>
+    <airlift.units.version>1.0</airlift.units.version>
+    <cmdb-client.version>0.0.2</cmdb-client.version>
+    <metrics.version>3.1.2</metrics.version>
+    <jolokia.version>1.3.6</jolokia.version>
+    <simpleclient.version>0.0.16</simpleclient.version>
+    <servlet.version>2.4</servlet.version>
+    <gid.version>4.1.0-SNAPSHOT</gid.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>studio.raptor</groupId>
+        <artifactId>ddal-jdbc</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>studio.raptor</groupId>
+        <artifactId>ddal-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>studio.raptor</groupId>
+        <artifactId>ddal-common</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>studio.raptor</groupId>
+        <artifactId>ddal-config</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>studio.raptor</groupId>
+        <artifactId>ddal-sqlparser</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-all</artifactId>
+        <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>fastjson</artifactId>
+        <version>1.2.17</version>
+      </dependency>
+      <dependency>
+        <groupId>studio.raptor</groupId>
+        <artifactId>cmdb-client</artifactId>
+        <version>${cmdb-client.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>studio.raptor</groupId>
+        <artifactId>raptor-gid</artifactId>
+        <version>${gid.version}</version>
+      </dependency>
+
+      <!-- log4j2 -->
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-slf4j-impl</artifactId>
+        <version>${log4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-api</artifactId>
+        <version>${log4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+        <version>${log4j.version}</version>
+      </dependency>
+      <!-- log4j2 end -->
+
+      <!-- monitor -->
+      <dependency>
+        <groupId>io.dropwizard.metrics</groupId>
+        <artifactId>metrics-core</artifactId>
+        <version>${metrics.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.dropwizard.metrics</groupId>
+        <artifactId>metrics-healthchecks</artifactId>
+        <version>${metrics.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.prometheus</groupId>
+        <artifactId>simpleclient</artifactId>
+        <version>${simpleclient.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>servlet-api</artifactId>
+        <version>${servlet.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <!-- monitor end -->
+
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${mockito.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>hamcrest-library</artifactId>
+        <version>${hamcrest.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.code.findbugs</groupId>
+        <artifactId>jsr305</artifactId>
+        <version>${jsr305.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>${mysql.connector.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>${h2database.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-pool2</artifactId>
+        <version>${commons-pool2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-dbcp2</artifactId>
+        <version>${dbcp2.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <!-- for benchmark test -->
+      <dependency>
+        <groupId>io.airlift</groupId>
+        <artifactId>units</artifactId>
+        <version>${airlift.units.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.airlift</groupId>
+        <artifactId>bootstrap</artifactId>
+        <version>${airlift.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.airlift</groupId>
+        <artifactId>stats</artifactId>
+        <version>${airlift.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-collections4</artifactId>
+        <version>${commons-collectios4.version}</version>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!--<dependency>-->
+    <!--<groupId>org.apache.logging.log4j</groupId>-->
+    <!--<artifactId>log4j-slf4j-impl</artifactId>-->
+    <!--<optional>true</optional>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+    <!--<groupId>org.apache.logging.log4j</groupId>-->
+    <!--<artifactId>log4j-api</artifactId>-->
+    <!--<optional>true</optional>-->
+    <!--</dependency>-->
+    <!--<dependency>-->
+    <!--<groupId>org.apache.logging.log4j</groupId>-->
+    <!--<artifactId>log4j-core</artifactId>-->
+    <!--<optional>true</optional>-->
+    <!--</dependency>-->
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <!-- Snapshot repository -->
+  <repositories>
+    <repository>
+      <id>snapshots-repo</id>
+      <url>http://192.168.1.22:8081/nexus/content/repositories/AL-Snapshot/</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <!--<repository>
+      <id>snapshots-repo</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>-->
+  </repositories>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.6.0</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <testSource>${java.version}</testSource>
+          <testTarget>${java.version}</testTarget>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.4.1</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.5</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3.2</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.10</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>2.3.1</version>
+      </plugin>
+      <plugin>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.0</version>
+      </plugin>
+      <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <version>2.2.0</version>
+        <executions>
+          <execution>
+            <id>get-the-git-infos</id>
+            <goals>
+              <goal>revision</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <verbose>true</verbose>
+          <dateFormat>yyyy-MM-dd'T'HH:mm:ssZ</dateFormat>
+          <generateGitPropertiesFile>true</generateGitPropertiesFile>
+          <failOnNoGitDirectory>false</failOnNoGitDirectory>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <profiles>
+    <profile>
+      <id>disable-java8-doclint</id>
+      <activation>
+        <jdk>[1.8,)</jdk>
+      </activation>
+      <properties>
+        <additionalparam>-Xdoclint:none</additionalparam>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>deploy_to_local</id>
+      <activation>
+        <property>
+          <name>deployTo</name>
+          <value>local</value>
+        </property>
+      </activation>
+      <!--<distributionManagement>-->
+      <!--<repository>-->
+      <!--<uniqueVersion>false</uniqueVersion>-->
+      <!--<id>raptor-nexus</id>-->
+      <!--<name>public-distribution</name>-->
+      <!--<url>http://192.168.199.23:8081/repository/maven-releases/</url>-->
+      <!--</repository>-->
+      <!--<snapshotRepository>-->
+      <!--<uniqueVersion>true</uniqueVersion>-->
+      <!--<id>raptor-nexus</id>-->
+      <!--<name>snapshot-distribution</name>-->
+      <!--<url>http://192.168.199.23:8081/repository/maven-snapshots/</url>-->
+      <!--</snapshotRepository>-->
+      <!--</distributionManagement>-->
+
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.0.1</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>deploy_to_fz</id>
+      <activation>
+        <property>
+          <name>deployTo</name>
+          <value>fz</value>
+        </property>
+      </activation>
+      <distributionManagement>
+        <snapshotRepository>
+          <uniqueVersion>true</uniqueVersion>
+          <id>AL-Snapshot</id>
+          <name>fz-snapshot-distribution</name>
+          <url>http://192.168.1.22:8081/nexus/content/repositories/AL-Snapshot/</url>
+        </snapshotRepository>
+      </distributionManagement>
+
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.0.1</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>deploy_to_maven_central</id>
+      <activation>
+        <property>
+          <name>deployTo</name>
+          <value>central</value>
+        </property>
+      </activation>
+
+      <distributionManagement>
+        <snapshotRepository>
+          <id>ossrh</id>
+          <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+          <!--<uniqueVersion>false</uniqueVersion>-->
+        </snapshotRepository>
+        <repository>
+          <id>ossrh</id>
+          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+      </distributionManagement>
+
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.0.1</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.10.4</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <aggregate>true</aggregate>
+              <charset>${project.build.sourceEncoding}</charset>
+              <encoding>${project.build.sourceEncoding}</encoding>
+              <docencoding>${project.build.sourceEncoding}</docencoding>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>
