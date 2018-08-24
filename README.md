@@ -2,7 +2,7 @@
 Raptor-DDAL是使用Java开发的分布式数据库中间件，用于屏蔽底层分库分表的细节，透明化分布式数据的访问。其简单易用的系统配置，智能高效的执行计划，在线平滑的数据伸缩以及完善的运维工具配套等特点，助力企业快速搭建分布式数据存储平台。
 
 ## 技术架构(Architecture)
-<img src="http://git.oschina.net/uploads/images/2017/0111/180558_05829119_726360.jpeg" width="650" />
+<img src="" width="650" />
 
 ## 特性与约束(Features and Constraints)
 ### 特性
