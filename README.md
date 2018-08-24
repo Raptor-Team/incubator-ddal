@@ -50,7 +50,8 @@ Raptor-DDAL是使用Java开发的分布式数据库中间件，用于屏蔽底�
 
 ## 性能测试(Performance Testing)
 [性能测试报告](http://git.oschina.net/f150/raptor-ddal/wikis/8.%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95)
-##贡献者(Committers)
+
+## 贡献者(Committers)
 
 * 时邵猛 shishaomeng@gmail.com
 * 蔡为铭 sam.iagd@hotmail.com
